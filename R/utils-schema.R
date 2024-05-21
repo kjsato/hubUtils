@@ -38,7 +38,7 @@ get_schema_url <- function(config = c("tasks", "admin", "model"),
 #' @export
 #' @examples
 #' get_schema_valid_versions()
-get_schema_valid_versions <- function(branch = "main", ) {
+get_schema_valid_versions <- function(branch = "main") {
   branches <- gh::gh(
     "GET /repos/Infectious-Disease-Modeling-Hubs/schemas/branches"
   ) %>%
