@@ -15,7 +15,8 @@
 #' @examples
 #' get_schema_url(config = "tasks", version = "v0.0.0.9")
 get_schema_url <- function(config = c("tasks", "admin", "model"),
-                           version, branch = "main") {
+                           version, branch = "main",
+                           schema_repo ="Infectious-Disease-Modeling-Hubs/schemas") {
   config <- rlang::arg_match(config)
   rlang::check_required(version)
 
@@ -23,7 +24,7 @@ get_schema_url <- function(config = c("tasks", "admin", "model"),
   # repo
   validate_schema_version(version, branch = branch)
 
-  schema_repo <- "Infectious-Disease-Modeling-Hubs/schemas"
+  # schema_repo <- "Infectious-Disease-Modeling-Hubs/schemas"
   glue::glue("https://raw.githubusercontent.com/{schema_repo}/{branch}/{version}/{config}-schema.json")
 }
 
@@ -37,7 +38,7 @@ get_schema_url <- function(config = c("tasks", "admin", "model"),
 #' @export
 #' @examples
 #' get_schema_valid_versions()
-get_schema_valid_versions <- function(branch = "main") {
+get_schema_valid_versions <- function(branch = "main", ) {
   branches <- gh::gh(
     "GET /repos/Infectious-Disease-Modeling-Hubs/schemas/branches"
   ) %>%
