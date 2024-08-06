@@ -15,7 +15,8 @@
 #' @examples
 #' get_schema_url(config = "tasks", version = "v0.0.0.9")
 get_schema_url <- function(config = c("tasks", "admin", "model"),
-                           version, branch = "main") {
+                           version, branch = "main",
+                           schema_repo = "hubverse-org/schemas") {
   config <- rlang::arg_match(config)
   rlang::check_required(version)
 
@@ -23,7 +24,7 @@ get_schema_url <- function(config = c("tasks", "admin", "model"),
   # repo
   validate_schema_version(version, branch = branch)
 
-  schema_repo <- "hubverse-org/schemas"
+  # schema_repo <- "hubverse-org/schemas"
   glue::glue("https://raw.githubusercontent.com/{schema_repo}/{branch}/{version}/{config}-schema.json")
 }
 
@@ -38,21 +39,24 @@ get_schema_url <- function(config = c("tasks", "admin", "model"),
 #' @importFrom gh gh
 #' @examples
 #' get_schema_valid_versions()
-get_schema_valid_versions <- function(branch = "main") {
-  branches <- gh(
-    "GET /repos/hubverse-org/schemas/branches"
+get_schema_valid_versions <- function(branch = "main", schema_repo = "hubverse-org/schemas") {
+  branches <- gh::gh(
+    "GET /repos/{schema_repo}/branches",
+    schema_repo = schema_repo
+>>>>>>> enhancement/v3-utils
   ) %>%
     vapply("[[", "", "name")
 
   if (!branch %in% branches) {
     cli::cli_abort(c(
       "x" = "{.val {branch}} is not a valid branch in schema repository
-                   {.url https://github.com/hubverse-org/schemas/branches}",
+                   {.url https://github.com/{schema_repo}/branches}",
       "i" = "Current valid branches are: {.val {branches}}"
     ))
   }
 
-  req <- gh("GET /repos/hubverse-org/schemas/git/trees/{branch}",
+  req <- gh::gh("GET /repos/{schema_repo}/git/trees/{branch}",
+    schema_repo = schema_repo,
     branch = branch
   )
 
@@ -81,7 +85,7 @@ get_schema <- function(schema_url) {
     cli::cli_abort(
       "Connection to schema repository failed. Please check your internet connection.
             If the problem persists, please open an issue at:
-            {.url https://github.com/hubverse-org/schemas}"
+            {.url {schema_url}}"
     )
   }
 
@@ -121,8 +125,8 @@ get_schema_version_latest <- function(schema_version = "latest",
   }
 }
 
-validate_schema_version <- function(schema_version, branch) {
-  valid_versions <- get_schema_valid_versions(branch = branch)
+validate_schema_version <- function(schema_version, branch, schema_repo = "Infectious-Disease-Modeling-Hubs/schemas") {
+  valid_versions <- get_schema_valid_versions(branch = branch, schema_repo = schema_repo)
 
   if (schema_version %in% valid_versions) {
     invisible(schema_version)
@@ -130,7 +134,7 @@ validate_schema_version <- function(schema_version, branch) {
     cli::cli_abort(
       "{.val {schema_version}} is not a valid schema version.
             Current valid schema version{?s} {?is/are}: {.val {valid_versions}}.
-            For more details, visit {.url https://github.com/hubverse-org/schemas}"
+            For more details, visit {.url https://github.com/{{schema_repo}}"
     )
   }
 }
