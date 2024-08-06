@@ -16,7 +16,7 @@
 #' get_schema_url(config = "tasks", version = "v0.0.0.9")
 get_schema_url <- function(config = c("tasks", "admin", "model"),
                            version, branch = "main",
-                           schema_repo = "Infectious-Disease-Modeling-Hubs/schemas") {
+                           schema_repo = "hubverse-org/schemas") {
   config <- rlang::arg_match(config)
   rlang::check_required(version)
 
@@ -38,7 +38,7 @@ get_schema_url <- function(config = c("tasks", "admin", "model"),
 #' @export
 #' @examples
 #' get_schema_valid_versions()
-get_schema_valid_versions <- function(branch = "main", schema_repo = "Infectious-Disease-Modeling-Hubs/schemas") {
+get_schema_valid_versions <- function(branch = "main", schema_repo = "hubverse-org/schemas") {
   branches <- gh::gh(
     "GET /repos/{schema_repo}/branches",
     schema_repo = schema_repo
@@ -122,7 +122,7 @@ get_schema_version_latest <- function(schema_version = "latest",
   }
 }
 
-validate_schema_version <- function(schema_version, branch, schema_repo = "Infectious-Disease-Modeling-Hubs/schemas") {
+validate_schema_version <- function(schema_version, branch, schema_repo = "hubverse-org/schemas") {
   valid_versions <- get_schema_valid_versions(branch = branch, schema_repo = schema_repo)
 
   if (schema_version %in% valid_versions) {
