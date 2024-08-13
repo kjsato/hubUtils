@@ -43,7 +43,6 @@ get_schema_valid_versions <- function(branch = "main", schema_repo = "hubverse-o
   branches <- gh::gh(
     "GET /repos/{schema_repo}/branches",
     schema_repo = schema_repo
->>>>>>> enhancement/v3-utils
   ) %>%
     vapply("[[", "", "name")
 
