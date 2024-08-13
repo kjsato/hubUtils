@@ -125,7 +125,7 @@ get_schema_version_latest <- function(schema_version = "latest",
   }
 }
 
-validate_schema_version <- function(schema_version, branch, schema_repo = "Infectious-Disease-Modeling-Hubs/schemas") {
+validate_schema_version <- function(schema_version, branch, schema_repo = "hubverse-org/schemas") {
   valid_versions <- get_schema_valid_versions(branch = branch, schema_repo = schema_repo)
 
   if (schema_version %in% valid_versions) {
